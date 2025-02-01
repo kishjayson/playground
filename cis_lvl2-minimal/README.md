@@ -1,6 +1,6 @@
 # cis_lvl2-minimal
 
-A lightweight [security baseline](cis_lvl2-minimal/macos_security/build/cis_lvl2-minimal/cis_lvl2-minimal.pdf) enforced solely through [configuration profiles](cis_lvl2-minimal/macos_security/build/cis_lvl2-minimal/mobileconfigs/unsigned).
+A lightweight security baseline enforced solely through configuration profiles.
 
 ## Resources
  
