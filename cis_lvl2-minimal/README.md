@@ -3,7 +3,7 @@
 A lightweight security baseline enforced solely through configuration profiles.
 
 ## Resources
- 
-[Mac Security Compliance Tutorials | Documentation](https://it-training.apple.com/tutorials/apt-compliance/)
 
 [macOS Security Compliance Project](https://github.com/usnistgov/macos_security)
+
+[Mac Security Compliance Tutorials | Documentation](https://it-training.apple.com/tutorials/apt-compliance/)
