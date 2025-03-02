@@ -1,0 +1,64 @@
+volumes:
+  mysql_data:
+
+networks:
+  fleet-server:
+    name: fleet-server
+
+services:
+  mysql:
+    image: mysql:8.0.36
+    platform: linux/x86_64
+    command: mysqld --event-scheduler=ON
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: fleet
+      MYSQL_USER: fleet
+      MYSQL_PASSWORD: fleet
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+    networks:
+      - fleet-server
+
+  redis:
+    image: redis:6
+    networks:
+      - fleet-server
+
+  fleet:
+    image: fleetdm/fleet:${FLEET_VERSION:-latest}
+    platform: linux/x86_64
+    command: >
+      sh -c "/usr/bin/fleet prepare db --no-prompt &&
+             /usr/bin/fleet serve"
+    environment:
+      
+      FLEET_MYSQL_ADDRESS: mysql:3306
+      FLEET_MYSQL_DATABASE: fleet
+      FLEET_MYSQL_USERNAME: fleet
+      FLEET_MYSQL_PASSWORD: fleet
+
+      FLEET_REDIS_ADDRESS: redis:6379
+
+      FLEET_SERVER_ADDRESS: 0.0.0.0:8443
+      FLEET_SERVER_CERT: /config/fleet.local.crt
+      FLEET_SERVER_KEY: /config/fleet.local.key
+      FLEET_SERVER_PRIVATE_KEY: ed7b588aeb08f2658925b347730c39ce1cfbeff3dabd8d46c6c140eeba555163
+
+      FLEET_FILESYSTEM_STATUS_LOG_FILE: /logs/status.log
+      FLEET_FILESYSTEM_RESULT_LOG_FILE: /logs/result.log
+      FLEET_VULNERABILITIES_DATABASES_PATH: /vulndb
+
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./config:/config
+      - ./logs:/logs
+      - ./vulndb:/vulndb
+    ports:
+      - "8443:8443"
+    networks:
+      - fleet-server

@@ -1,0 +1,310 @@
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce Installation of XProtect Remediator and Gatekeeper Updates Automatically
+  platforms: macOS
+  platform: darwin
+  description: os_config_data_install_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'ConfigDataInstall' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'ConfigDataInstall' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enable Firewall Logging
+  platforms: macOS
+  platform: darwin
+  description: os_firewall_log_enable 
+  query: SELECT 1 WHERE ( EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.security.firewall' AND name = 'EnableLogging' AND ( value = 1 OR value = 'true' ) AND username = '' ) AND EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.security.firewall' AND name = 'LoggingOption' AND value = "detail" AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.security.firewall' AND name = 'EnableLogging' AND ( value != 1 AND value != 'true' ) ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.security.firewall' AND name = 'LoggingOption' AND value != "detail" ) ) OR ( EXISTS ( SELECT 1 FROM plist WHERE path = '/Library/Preferences/com.apple.alf.plist' AND key = 'loggingenabled' AND value = 1 ) AND EXISTS ( SELECT 1 FROM plist WHERE path = '/Library/Preferences/com.apple.alf.plist' AND key = 'loggingoption' AND value = 2 ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enable Gatekeeper
+  platforms: macOS
+  platform: darwin
+  description: os_gatekeeper_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.systempolicy.control' AND name = 'EnableAssessment' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.systempolicy.control' AND name = 'EnableAssessment' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Ensure Advertising Privacy Protection in Safari Is Enabled
+  platforms: macOS
+  platform: darwin
+  description: os_safari_advertising_privacy_protection_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies AS mp INNER JOIN logged_in_users AS lin ON mp.username = lin.user WHERE domain = 'com.apple.Safari' AND name = 'WebKitPreferences.privateClickMeasurementEnabled' AND (value != 0 OR value != 'false') ) AND NOT EXISTS ( SELECT 1 FROM managed_policies AS mp INNER JOIN logged_in_users AS lin ON mp.username = lin.user WHERE domain = 'com.apple.Safari' AND name = 'WebKitPreferences.privateClickMeasurementEnabled' AND (value = 0 AND value = 'false') );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Disable Automatic Opening of Safe Files in Safari
+  platforms: macOS
+  platform: darwin
+  description: os_safari_open_safe_downloads_disable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies AS mp INNER JOIN logged_in_users AS lin ON mp.username = lin.user WHERE domain = 'com.apple.Safari' AND name = 'AutoOpenSafeDownloads' AND (value = 0 OR value = 'false') ) AND NOT EXISTS ( SELECT 1 FROM managed_policies AS mp INNER JOIN logged_in_users AS lin ON mp.username = lin.user WHERE domain = 'com.apple.Safari' AND name = 'AutoOpenSafeDownloads' AND (value != 0 AND value != 'false') );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Ensure Prevent Cross-site Tracking in Safari Is Enabled
+  platforms: macOS
+  platform: darwin
+  description: os_safari_prevent_cross-site_tracking_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies AS mp INNER JOIN logged_in_users AS lin ON mp.username = lin.user WHERE (domain = 'com.apple.Safari' AND name = 'WebKitPreferences.storageBlockingPolicy' AND value = 1) OR (domain = 'com.apple.Safari' AND name = 'WebKitStorageBlockingPolicy' AND value = 1) OR (domain = 'com.apple.Safari' AND name = 'BlockStoragePolicy' AND value = 2) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Ensure Warn When Visiting A Fraudulent Website in Safari Is Enabled
+  platforms: macOS
+  platform: darwin
+  description: os_safari_warn_fraudulent_website_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies AS mp INNER JOIN logged_in_users AS lin ON mp.username = lin.user WHERE domain = 'com.apple.Safari' AND name = 'WarnAboutFraudulentWebsites' AND (value != 0 OR value != 'false') ) AND NOT EXISTS ( SELECT 1 FROM managed_policies AS mp INNER JOIN logged_in_users AS lin ON mp.username = lin.user WHERE domain = 'com.apple.Safari' AND name = 'WarnAboutFraudulentWebsites' AND (value = 0 AND value = 'false') );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Ensure Secure Keyboard Entry Terminal.app is Enabled
+  platforms: macOS
+  platform: darwin
+  description: os_terminal_secure_keyboard_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.Terminal' AND name = 'SecureKeyboardEntry' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.Terminal' AND name = 'SecureKeyboardEntry' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Limit Consecutive Failed Login Attempts to 5
+  platforms: macOS
+  platform: darwin
+  description: pwpolicy_account_lockout_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.mobiledevice.passwordpolicy' AND name = 'maxFailedAttempts' AND ( value <= 5 ) AND username = '' );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Set Account Lockout Time to 15 Minutes
+  platforms: macOS
+  platform: darwin
+  description: pwpolicy_account_lockout_timeout_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.mobiledevice.passwordpolicy' AND name = 'minutesUntilFailedLoginReset' AND ( value <= 15 ) AND username = '' );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Disable Unattended or Automatic Logon to the System
+  platforms: macOS
+  platform: darwin
+  description: system_settings_automatic_login_disable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.loginwindow' AND name = 'com.apple.login.mcx.DisableAutoLoginClient' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.loginwindow' AND name = 'com.apple.login.mcx.DisableAutoLoginClient' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enable Bluetooth Menu
+  platforms: macOS
+  platform: darwin
+  description: system_settings_bluetooth_menu_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.controlcenter' AND name = 'Bluetooth' AND ( value = 18 ) AND username = '' );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce Critical Security Updates to be Installed
+  platforms: macOS
+  platform: darwin
+  description: system_settings_critical_update_install_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'CriticalUpdateInstall' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'CriticalUpdateInstall' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce FileVault
+  platforms: macOS
+  platform: darwin
+  description: system_settings_filevault_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain='com.apple.MCX' AND name='dontAllowFDEDisable' AND (value = 1 OR value = 'true') AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain='com.apple.MCX' AND name='dontAllowFDEDisable' AND (value != 1 AND value != 'true') ) AND EXISTS ( SELECT 1 FROM disk_encryption WHERE user_uuid IS NOT "" AND filevault_status = 'on' );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enable macOS Application Firewall
+  platforms: macOS
+  platform: darwin
+  description: system_settings_firewall_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.security.firewall' AND name = 'EnableFirewall' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.security.firewall' AND name = 'EnableFirewall' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enable Firewall Stealth Mode
+  platforms: macOS
+  platform: darwin
+  description: system_settings_firewall_stealth_mode_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.security.firewall' AND name = 'EnableStealthMode' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.security.firewall' AND name = 'EnableStealthMode' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Disable the Guest Account
+  platforms: macOS
+  platform: darwin
+  description: system_settings_guest_account_disable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain='com.apple.MCX' AND name='DisableGuestAccount' AND (value != 0 OR value != 'false') AND username = '' ) AND EXISTS ( SELECT 1 FROM managed_policies WHERE domain='com.apple.MCX' AND name='EnableGuestAccount' AND (value = 0 OR value = 'false') AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain='com.apple.MCX' AND name='DisableGuestAccount' AND (value = 0 AND value = 'false') ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain='com.apple.MCX' AND name='EnableGuestAccount' AND (value != 0 AND value != 'false') );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce macOS Updates are Automatically Installed
+  platforms: macOS
+  platform: darwin
+  description: system_settings_install_macos_updates_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'AutomaticallyInstallMacOSUpdates' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'AutomaticallyInstallMacOSUpdates' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Configure Login Window to Show A Custom Message
+  platforms: macOS
+  platform: darwin
+  description: system_settings_loginwindow_loginwindowtext_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.loginwindow' AND name = 'LoginwindowText' AND (value != '') );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Configure Login Window to Prompt for Username and Password
+  platforms: macOS
+  platform: darwin
+  description: system_settings_loginwindow_prompt_username_password_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.loginwindow' AND name = 'SHOWFULLNAME' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.loginwindow' AND name = 'SHOWFULLNAME' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Disable Password Hints
+  platforms: macOS
+  platform: darwin
+  description: system_settings_password_hints_disable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.loginwindow' AND name = 'RetriesUntilHint' AND (value = '0') AND username = '' );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Disable Personalized Advertising
+  platforms: macOS
+  platform: darwin
+  description: system_settings_personalized_advertising_disable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.applicationaccess' AND name = 'allowApplePersonalizedAdvertising' AND ( value = 0 OR value = 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.applicationaccess' AND name = 'allowApplePersonalizedAdvertising' AND ( value != 0 AND value != 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce Session Lock After Screen Saver is Started
+  platforms: macOS
+  platform: darwin
+  description: system_settings_screensaver_ask_for_password_delay_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.screensaver' AND name = 'askForPasswordDelay' AND (value = '5') AND username = '' );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce Screen Saver Timeout
+  platforms: macOS
+  platform: darwin
+  description: system_settings_screensaver_timeout_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.screensaver' AND name = 'idleTime' AND (value = '1200') AND username = '' );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce Software Update App Update Updates Automatically
+  platforms: macOS
+  platform: darwin
+  description: system_settings_software_update_app_update_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'AutomaticallyInstallAppUpdates' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'AutomaticallyInstallAppUpdates' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce Software Update Downloads Updates Automatically
+  platforms: macOS
+  platform: darwin
+  description: system_settings_software_update_download_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'AutomaticDownload' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'AutomaticDownload' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce Software Update Automatically
+  platforms: macOS
+  platform: darwin
+  description: system_settings_software_update_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'AutomaticCheckEnabled' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.SoftwareUpdate' AND name = 'AutomaticCheckEnabled' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Configure Time Machine for Automatic Backups
+  platforms: macOS
+  platform: darwin
+  description: system_settings_time_machine_auto_backup_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.TimeMachine' AND name = 'AutoBackup' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.TimeMachine' AND name = 'AutoBackup' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Configure macOS to Use an Authorized Time Server
+  platforms: macOS
+  platform: darwin
+  description: system_settings_time_server_configure
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.MCX' AND name = 'timeServer' AND (value = 'time.apple.com') AND username = '' );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enforce macOS Time Synchronization
+  platforms: macOS
+  platform: darwin
+  description: system_settings_time_server_enforce
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.timed' AND name = 'TMAutomaticTimeOnlyEnabled' AND ( value != 0 OR value != 'false' ) AND username = '' ) AND NOT EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.timed' AND name = 'TMAutomaticTimeOnlyEnabled' AND ( value = 0 AND value = 'false' ) );
+  tags: cis_lvl2-minimal
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: Enable Wifi Menu
+  platforms: macOS
+  platform: darwin
+  description: system_settings_wifi_menu_enable
+  query: SELECT 1 WHERE EXISTS ( SELECT 1 FROM managed_policies WHERE domain = 'com.apple.controlcenter' AND name = 'WiFi' AND (value = '18') AND username = '' );
+  tags: cis_lvl2-minimal
