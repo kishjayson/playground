@@ -1,6 +1,6 @@
 # Service Helper
  
-A resource for Apple admins that goes beyond troubleshooting—offering expert technical insights while also helping you think clearly and communicate effectively.
+I help you see clearly. Whether it’s Apple device management, endpoint monitoring, or refining your thoughts, I strip away complexity so you can focus on what matters.
 
 ## Resources
 
