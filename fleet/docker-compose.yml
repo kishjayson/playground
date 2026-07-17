@@ -1,0 +1,84 @@
+services:
+  mysql:
+    image: mysql:8.0.36
+    platform: linux/x86_64
+    restart: unless-stopped
+    command: mysqld --event-scheduler=ON
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: fleet
+      MYSQL_USER: fleet
+      MYSQL_PASSWORD: fleet
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - fleet-server
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "fleet", "-pfleet"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  redis:
+    image: redis:6
+    restart: unless-stopped
+    networks:
+      - fleet-server
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  fleet:
+    image: fleetdm/fleet:${FLEET_VERSION:-latest}
+    platform: linux/x86_64
+    restart: unless-stopped
+    network_mode: "service:tailscale"
+    command: >
+      sh -c "/usr/bin/fleet prepare db --no-prompt &&
+             /usr/bin/fleet serve"
+    environment:
+      FLEET_MYSQL_ADDRESS: mysql:3306
+      FLEET_MYSQL_DATABASE: fleet
+      FLEET_MYSQL_USERNAME: fleet
+      FLEET_MYSQL_PASSWORD: fleet
+      FLEET_REDIS_ADDRESS: redis:6379
+      FLEET_SERVER_ADDRESS: 0.0.0.0:8080
+      FLEET_SERVER_TLS: false
+      FLEET_FILESYSTEM_STATUS_LOG_FILE: /logs/status.log
+      FLEET_FILESYSTEM_RESULT_LOG_FILE: /logs/result.log
+      FLEET_VULNERABILITIES_DATABASES_PATH: /vulndb
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      tailscale:
+        condition: service_started
+    volumes:
+      - ./logs:/logs
+      - ./vulndb:/vulndb
+
+  tailscale:
+    image: tailscale/tailscale:${TAILSCALE_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_HOSTNAME: ${TS_HOSTNAME:-fleet}
+      TS_SERVE_CONFIG: /config/serve.json
+    volumes:
+      - tailscale_data:/var/lib/tailscale
+      - ./config:/config
+    networks:
+      - fleet-server
+
+volumes:
+  mysql_data:
+  tailscale_data:
+
+networks:
+  fleet-server:
+    name: fleet-server
