@@ -50,6 +50,7 @@ services:
       FLEET_FILESYSTEM_STATUS_LOG_FILE: /logs/status.log
       FLEET_FILESYSTEM_RESULT_LOG_FILE: /logs/result.log
       FLEET_VULNERABILITIES_DATABASES_PATH: /vulndb
+      FLEET_LICENSE_KEY: ${FLEET_LICENSE_KEY}
     depends_on:
       mysql:
         condition: service_healthy
