@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/homebrew_packages
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: homebrew_packages
+  observer_can_run: false
+  platform: darwin
+  query: |-
+    SELECT  name,
+            path,
+            version,
+            type
+    FROM    homebrew_packages;
+  team: ""
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/apps
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: apps
+  observer_can_run: false
+  platform: darwin
+  query: |-
+    SELECT  name,
+            path,
+            bundle_identifier,
+            bundle_short_version,
+            datetime(last_opened_time, 'unixepoch') AS last_used_date
+    FROM    apps
+    WHERE   path NOT LIKE '%/Library/%'
+    AND     path NOT LIKE '%/System/%'
+    AND     path NOT LIKE '%.app/%';
+  team: ""
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/os_version
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: os_version
+  observer_can_run: false
+  platform: darwin,windows,linux,chrome
+  query: |-
+    SELECT  name,
+            version,
+            build,
+            platform
+    FROM    os_version;
+  team: ""
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/etc_hosts
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: etc_hosts
+  observer_can_run: false
+  platform: darwin,windows,linux
+  query: |-
+    SELECT  *
+    FROM    etc_hosts
+    WHERE   address != '127.0.0.1'
+    AND     address != '::1'
+    AND     address != '255.255.255.255';
+  team: ""
