@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadUUID</key>
+	<string>ddcfa4dc-9ad5-4dc7-b638-4a593cb3d679</string>
+	<key>Services</key>
+	<dict>
+		<key>AppleEvents</key>
+		<array/>
+		<key>SystemPolicyAllFiles</key>
+		<array>
+			<dict>
+				<key>Authorization</key>
+				<string>Allow</string>
+				<key>CodeRequirement</key>
+				<string>identifier "com.fleetdm.orbit" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "8VBZ3948LU"</string>
+				<key>Identifier</key>
+				<string>/opt/orbit/bin/orbit/macos/edge/orbit</string>
+				<key>IdentifierType</key>
+				<string>path</string>
+			</dict>
+		</array>
+	</dict>
+</dict>
+</plist>
