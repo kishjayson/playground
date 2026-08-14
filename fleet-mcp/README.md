@@ -33,13 +33,13 @@ docker compose ps
 docker compose logs -f fleet-mcp
 ```
 
-Fleet MCP is exposed over the tailnet at:
+Fleet MCP is exposed at:
 
 ```text
 https://fleet-mcp.tail2bebc3.ts.net/sse
 ```
 
-The deployment does not enable Tailscale Funnel.
+Tailscale Funnel is enabled for this hostname, so the endpoint is reachable from the public Internet. Fleet MCP still requires its `MCP_AUTH_TOKEN` bearer token for MCP requests.
 
 ## Source
 
