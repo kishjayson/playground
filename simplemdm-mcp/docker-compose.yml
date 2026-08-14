@@ -1,0 +1,21 @@
+services:
+  simplemdm-mcp:
+    build:
+      context: .
+      args:
+        TUNNEL_CLIENT_REF: ${TUNNEL_CLIENT_REF:-105e17a79a36e4e5c897fd698ed2b8dbf935b144}
+    restart: unless-stopped
+    environment:
+      CONTROL_PLANE_API_KEY: ${CONTROL_PLANE_API_KEY}
+      CONTROL_PLANE_TUNNEL_ID: ${CONTROL_PLANE_TUNNEL_ID}
+      MCP_COMMAND: python -m simplemdm_mcp.server
+      SIMPLEMDM_BASE_URL: ${SIMPLEMDM_BASE_URL:-https://a.simplemdm.com/api/v1}
+      SIMPLEMDM_API_KEY: ${SIMPLEMDM_API_KEY}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      HEALTH_LISTEN_ADDR: 127.0.0.1:8080
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8080/readyz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
