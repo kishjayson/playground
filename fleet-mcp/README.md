@@ -1,6 +1,6 @@
 # Fleet MCP
 
-Runs Fleet's official MCP server through OpenAI Secure MCP Tunnel. Tailscale provides private access to Fleet.
+Runs Fleet's official MCP server through an OpenAI Secure MCP Tunnel. Tailscale provides network access to Fleet.
 
 ## Setup
 
@@ -94,7 +94,7 @@ ready
 
 ### 7. Add to ChatGPT
 
-Open [ChatGPT Plugins](https://chatgpt.com/plugins). See [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
+Open [ChatGPT Plugins](https://chatgpt.com/plugins) and create a developer-mode app. See [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-full-mcp-connectors-in-chatgpt).
 
 Use:
 
