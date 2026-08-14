@@ -1,0 +1,39 @@
+services:
+  fleet-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        FLEET_REF: ${FLEET_MCP_REF:-main}
+    restart: unless-stopped
+    network_mode: "service:tailscale"
+    environment:
+      FLEET_BASE_URL: ${FLEET_BASE_URL:-https://fleet.tail2bebc3.ts.net}
+      FLEET_API_KEY: ${FLEET_API_KEY}
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN}
+      PORT: 8080
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      tailscale:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  tailscale:
+    image: tailscale/tailscale:${TAILSCALE_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_HOSTNAME: ${TS_HOSTNAME:-fleet-mcp}
+      TS_SERVE_CONFIG: /config/serve.json
+    volumes:
+      - tailscale_data:/var/lib/tailscale
+      - ./config:/config:ro
+
+volumes:
+  tailscale_data:
