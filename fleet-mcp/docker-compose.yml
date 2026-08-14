@@ -1,23 +1,27 @@
 services:
-  fleet-mcp:
+  tunnel-client:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         FLEET_REF: ${FLEET_MCP_REF:-main}
+        TUNNEL_CLIENT_VERSION: ${TUNNEL_CLIENT_VERSION:-v0.0.10}
     restart: unless-stopped
     network_mode: "service:tailscale"
     environment:
+      CONTROL_PLANE_API_KEY: ${CONTROL_PLANE_API_KEY}
+      CONTROL_PLANE_TUNNEL_ID: ${CONTROL_PLANE_TUNNEL_ID}
+      MCP_COMMAND: /usr/local/bin/fleet-mcp -transport stdio
       FLEET_BASE_URL: ${FLEET_BASE_URL:-https://fleet.tail2bebc3.ts.net}
       FLEET_API_KEY: ${FLEET_API_KEY}
       MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN}
-      PORT: 8080
       LOG_LEVEL: ${LOG_LEVEL:-info}
+      HEALTH_LISTEN_ADDR: 127.0.0.1:8080
     depends_on:
       tailscale:
         condition: service_started
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8080/healthz"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8080/readyz"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -30,10 +34,8 @@ services:
       TS_AUTHKEY: ${TS_AUTHKEY}
       TS_STATE_DIR: /var/lib/tailscale
       TS_HOSTNAME: ${TS_HOSTNAME:-fleet-mcp}
-      TS_SERVE_CONFIG: /config/serve.json
     volumes:
       - tailscale_data:/var/lib/tailscale
-      - ./config:/config:ro
 
 volumes:
   tailscale_data:
