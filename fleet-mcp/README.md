@@ -1,6 +1,8 @@
 # Fleet MCP
 
-Run Fleet's official MCP server through an [OpenAI Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels), with Tailscale providing private reachability from Fleet MCP to the Fleet server.
+This is the bridge between ChatGPT and Fleet. It runs Fleet's official MCP server through an [OpenAI Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels), while Tailscale gives the MCP process a private path back to Fleet.
+
+If you already know what the variables mean, you can mostly fill in `.env` and keep moving. If you don't, the links below take you to the place where you create the value or to the documentation that explains it.
 
 ## 1. Clone the repository
 
@@ -10,68 +12,68 @@ cd playground/fleet-mcp
 cp .env.example .env
 ```
 
-`.env.example` contains pinned upstream revisions and the variables this deployment expects. Put secrets and environment-specific values in `.env`; do not edit the example file with real credentials.
+Keep real credentials in `.env`. The example file is only the configuration shape and the pinned upstream revisions.
 
-## 2. Connect Fleet MCP to Fleet
+## 2. Point Fleet MCP at Fleet
 
-Open `.env` and set the URL you use to reach your Fleet instance:
+Set the URL Fleet MCP should use to reach Fleet:
 
 ```dotenv
 FLEET_BASE_URL=https://fleet.example.com
 ```
 
-Create a Fleet API-only user in **Fleet → Settings → Users → Create user**, then add its token:
+In Fleet, go to **Settings → Users → Create user**, create an API-only user, then put its token in `.env`:
 
 ```dotenv
 FLEET_API_KEY=<fleet-api-only-user-token>
 ```
 
-Fleet documents API-only users in the [fleetctl guide](https://fleetdm.com/guides/fleetctl#using-fleetctl-with-an-api-only-user). The upstream [Fleet MCP configuration](https://github.com/fleetdm/fleet/tree/main/cmd/fleet-mcp#configuration) requires an API-only token; use the least-privileged role that covers the tools you intend to expose. Observer is sufficient for read-only inventory; use Observer+ if you intend to run live queries.
+Fleet explains API-only users in the [fleetctl guide](https://fleetdm.com/guides/fleetctl#using-fleetctl-with-an-api-only-user). The upstream [Fleet MCP configuration](https://github.com/fleetdm/fleet/tree/main/cmd/fleet-mcp#configuration) requires an API-only token. Use Observer for read-only inventory; use Observer+ if you want Fleet MCP to run live queries.
 
-Fleet MCP also requires an MCP auth token at startup, even though this deployment connects to it locally over stdio. Generate one:
+Fleet MCP also refuses to start without `MCP_AUTH_TOKEN`, even in stdio mode. Generate one:
 
 ```sh
 openssl rand -hex 32
 ```
 
-Copy the output into `.env`:
+Then add it:
 
 ```dotenv
 MCP_AUTH_TOKEN=<generated-token>
 ```
 
-This token is not used to authenticate ChatGPT to the Secure MCP Tunnel; it is retained because Fleet MCP requires it to start. See the upstream [Fleet MCP configuration](https://github.com/fleetdm/fleet/tree/main/cmd/fleet-mcp#configuration).
+That token is only satisfying Fleet MCP's startup contract here. ChatGPT reaches Fleet MCP through the Secure MCP Tunnel, not through Fleet MCP's HTTP bearer-auth path.
 
-## 3. Connect the deployment to Tailscale
+## 3. Give it a Tailscale identity
 
-Create an auth key from the [Tailscale Admin Console → Keys](https://console.tailscale.com/admin/settings/keys), then add it to `.env`:
+Create an auth key from [Tailscale Admin Console → Keys](https://console.tailscale.com/admin/settings/keys), then add it:
 
 ```dotenv
 TS_AUTHKEY=<tailscale-auth-key>
 TS_HOSTNAME=fleet-mcp
 ```
 
-Tailscale's [auth key documentation](https://tailscale.com/docs/features/access-control/auth-keys) explains key options, expiration, tags, and device behavior.
+If you don't remember what the auth-key options mean, use Tailscale's [auth key documentation](https://tailscale.com/docs/features/access-control/auth-keys). The Tailscale sidecar is only here so Fleet MCP can reach the Fleet server over the tailnet.
 
-The Tailscale sidecar gives Fleet MCP the same private network path you already use to reach Fleet. `FLEET_BASE_URL` still determines the Fleet address Fleet MCP actually calls.
+## 4. Create the Secure MCP Tunnel
 
-## 4. Create the OpenAI Secure MCP Tunnel
+Go to [OpenAI Platform → Tunnels](https://platform.openai.com/settings/organization/tunnels), create a tunnel, and associate it with the Platform organization and ChatGPT workspace that should be able to use it.
 
-Open [OpenAI Platform → Tunnels](https://platform.openai.com/settings/organization/tunnels) and create a tunnel. Associate it with the Platform organization and ChatGPT workspace that should be allowed to use it, then copy the tunnel ID into `.env`:
+Put the tunnel ID in `.env`:
 
 ```dotenv
 CONTROL_PLANE_TUNNEL_ID=<tunnel-id>
 ```
 
-Create a runtime key from [OpenAI Platform → API keys](https://platform.openai.com/api-keys) and add it:
+Then create the runtime API key from [OpenAI Platform → API keys](https://platform.openai.com/api-keys):
 
 ```dotenv
 CONTROL_PLANE_API_KEY=<openai-runtime-api-key>
 ```
 
-The identity behind the runtime key needs **Tunnels Read + Use**. Creating or editing tunnels requires **Tunnels Read + Manage**. See [Secure MCP Tunnel → Permissions and access](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels#permissions-and-access) for the distinction.
+The runtime identity needs **Tunnels Read + Use**. If you're creating or changing tunnels, that administrative identity needs **Tunnels Read + Manage**. OpenAI documents the distinction under [Secure MCP Tunnel → Permissions and access](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels#permissions-and-access).
 
-At this point the environment-specific portion of `.env` should contain values for:
+At this point the environment-specific part of `.env` should be filled in:
 
 ```dotenv
 CONTROL_PLANE_TUNNEL_ID=
@@ -83,16 +85,16 @@ TS_AUTHKEY=
 TS_HOSTNAME=fleet-mcp
 ```
 
-Leave `FLEET_MCP_REF` and `TUNNEL_CLIENT_REF` at the pinned values in `.env.example` unless you intentionally want to build different upstream revisions.
+Leave `FLEET_MCP_REF` and `TUNNEL_CLIENT_REF` alone unless you intentionally want to build different upstream revisions.
 
-## 5. Build and start
+## 5. Build and start it
 
 ```sh
 docker compose build --pull --no-cache
 docker compose up -d --force-recreate --remove-orphans
 ```
 
-Inspect the deployment:
+Check what came up:
 
 ```sh
 docker compose ps
@@ -106,19 +108,19 @@ docker compose exec fleet-mcp \
   wget -qO- http://127.0.0.1:8080/readyz
 ```
 
-Expected response:
+You want:
 
 ```text
 ready
 ```
 
-`ready` means the tunnel client considers its control-plane connection and local MCP binding ready for traffic. The Secure MCP Tunnel guide documents the tunnel client's [`/healthz`, `/readyz`, `/metrics`, and local `/ui` surfaces](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels#troubleshooting).
+That means the tunnel client considers both its OpenAI control-plane connection and the local Fleet MCP binding ready. If it doesn't, OpenAI documents the tunnel client's health surfaces under [Secure MCP Tunnel → Troubleshooting](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels#troubleshooting).
 
-## 7. Add Fleet MCP to ChatGPT
+## 7. Add it to ChatGPT
 
-Open [ChatGPT Plugins](https://chatgpt.com/plugins). If needed, enable Developer mode first; OpenAI documents the current controls in [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-apps-and-full-mcp-connectors-in-chatgpt-beta).
+Open [ChatGPT Plugins](https://chatgpt.com/plugins). If Developer mode is not already enabled, OpenAI keeps the current setup instructions in [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-apps-and-full-mcp-connectors-in-chatgpt-beta).
 
-Create a new plugin/app with:
+Create the plugin with:
 
 ```text
 Connection:     Tunnel
@@ -126,15 +128,13 @@ Tunnel:         fleet-mcp
 Authentication: No Auth
 ```
 
-`No Auth` means there is no additional end-user OAuth layer between ChatGPT and Fleet MCP. The tunnel client authenticates to OpenAI with `CONTROL_PLANE_API_KEY`; Fleet MCP authenticates to Fleet with `FLEET_API_KEY`.
-
-Start a new chat with the plugin enabled and ask a harmless read-only question, for example:
+Start a new chat with the plugin enabled and ask something harmless first:
 
 ```text
 fleet-mcp How many systems are enrolled in Fleet?
 ```
 
-If that returns Fleet data, the complete path is working:
+If you get real Fleet data back, the whole path is working:
 
 ```text
 ChatGPT
@@ -148,4 +148,4 @@ Fleet MCP
 Fleet
 ```
 
-The Dockerfile builds Fleet's official `cmd/fleet-mcp` and OpenAI's `tunnel-client` directly from the revisions pinned in `.env.example`; no Fleet MCP application source is copied into this repository.
+The Dockerfile builds Fleet's official `cmd/fleet-mcp` and OpenAI's `tunnel-client` directly from the revisions in `.env.example`; no Fleet MCP application source is copied into this repository.
