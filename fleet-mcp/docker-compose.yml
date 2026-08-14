@@ -1,0 +1,40 @@
+services:
+  fleet-mcp:
+    build:
+      context: .
+      args:
+        FLEET_REF: ${FLEET_MCP_REF:-f9eb61c4d789d11a8cb08b6ca974e17a7686beb7}
+        TUNNEL_CLIENT_REF: ${TUNNEL_CLIENT_REF:-105e17a79a36e4e5c897fd698ed2b8dbf935b144}
+    restart: unless-stopped
+    network_mode: "service:tailscale"
+    environment:
+      CONTROL_PLANE_API_KEY: ${CONTROL_PLANE_API_KEY}
+      CONTROL_PLANE_TUNNEL_ID: ${CONTROL_PLANE_TUNNEL_ID}
+      MCP_COMMAND: /usr/local/bin/fleet-mcp -transport stdio
+      FLEET_BASE_URL: ${FLEET_BASE_URL:-https://fleet.tail2bebc3.ts.net}
+      FLEET_API_KEY: ${FLEET_API_KEY}
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      HEALTH_LISTEN_ADDR: 127.0.0.1:8080
+    depends_on:
+      tailscale:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8080/readyz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  tailscale:
+    image: tailscale/tailscale:${TAILSCALE_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_HOSTNAME: ${TS_HOSTNAME:-fleet-mcp}
+    volumes:
+      - tailscale_data:/var/lib/tailscale
+
+volumes:
+  tailscale_data:
