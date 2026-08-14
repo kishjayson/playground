@@ -100,7 +100,7 @@ Use:
 
 ```text
 Connection:     Tunnel
-Tunnel:         fleet-mcp
+Tunnel:         Fleet MCP
 Authentication: No Auth
 ```
 
