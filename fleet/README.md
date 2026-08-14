@@ -45,7 +45,7 @@ fleet.tail2bebc3.ts.net
 
 The committed configuration uses Tailscale Funnel. For tailnet-only access, remove `AllowFunnel` and use Tailscale Serve.
 
-References: [Tailscale Funnel](https://tailscale.com/docs/features/tailscale-funnel), [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve).
+See [Tailscale Funnel](https://tailscale.com/docs/features/tailscale-funnel) and [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve).
 
 ### 4. Start
 
