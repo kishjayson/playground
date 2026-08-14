@@ -1,8 +1,8 @@
 # Fleet MCP
 
-Docker Compose deployment of Fleet's official MCP server through OpenAI Secure MCP Tunnel. Tailscale provides private reachability to Fleet.
+Runs Fleet's official MCP server through OpenAI Secure MCP Tunnel. Tailscale provides private access to Fleet.
 
-## Procedure
+## Setup
 
 ### 1. Prepare
 
@@ -12,9 +12,9 @@ cd playground/fleet-mcp
 cp .env.example .env
 ```
 
-### 2. Configure Fleet
+### 2. Add Fleet connection
 
-Set the Fleet URL and API-only user token in `.env`:
+Add the Fleet URL and API-only user token to `.env`:
 
 ```dotenv
 FLEET_BASE_URL=https://fleet.example.com
@@ -29,15 +29,15 @@ Generate the required Fleet MCP startup token:
 openssl rand -hex 32
 ```
 
-Set the result:
+Add the result to `.env`:
 
 ```dotenv
 MCP_AUTH_TOKEN=<generated-token>
 ```
 
-### 3. Configure Tailscale
+### 3. Add Tailscale
 
-Create an auth key at [Tailscale Admin Console → Keys](https://console.tailscale.com/admin/settings/keys), then set:
+Create an auth key at [Tailscale Admin Console → Keys](https://console.tailscale.com/admin/settings/keys), then add it to `.env`:
 
 ```dotenv
 TS_AUTHKEY=<tailscale-auth-key>
@@ -46,19 +46,17 @@ TS_HOSTNAME=fleet-mcp
 
 See [Tailscale auth keys](https://tailscale.com/docs/features/access-control/auth-keys).
 
-### 4. Configure Secure MCP Tunnel
+### 4. Add Secure MCP Tunnel
 
 Create the tunnel at [OpenAI Platform → Tunnels](https://platform.openai.com/settings/organization/tunnels). Associate it with the Platform organization and ChatGPT workspace that will use it.
 
-Set the tunnel ID:
+Add the tunnel ID to `.env`:
 
 ```dotenv
 CONTROL_PLANE_TUNNEL_ID=<tunnel-id>
 ```
 
-Create the runtime API key at [OpenAI Platform → API keys](https://platform.openai.com/api-keys). Grant **Tunnels Read + Use**.
-
-Set the key:
+Create a runtime API key at [OpenAI Platform → API keys](https://platform.openai.com/api-keys) with **Tunnels Read + Use**, then add it:
 
 ```dotenv
 CONTROL_PLANE_API_KEY=<openai-runtime-api-key>
@@ -75,7 +73,7 @@ docker compose build --pull --no-cache
 docker compose up -d --force-recreate --remove-orphans
 ```
 
-### 6. Verify
+### 6. Check
 
 ```sh
 docker compose ps
@@ -85,8 +83,7 @@ docker compose logs -f fleet-mcp
 Check tunnel readiness:
 
 ```sh
-docker compose exec fleet-mcp \
-  wget -qO- http://127.0.0.1:8080/readyz
+docker compose exec fleet-mcp wget -qO- http://127.0.0.1:8080/readyz
 ```
 
 Expected response:
@@ -95,11 +92,11 @@ Expected response:
 ready
 ```
 
-### 7. Register with ChatGPT
+### 7. Add to ChatGPT
 
 Open [ChatGPT Plugins](https://chatgpt.com/plugins). See [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
 
-Create the plugin with:
+Use:
 
 ```text
 Connection:     Tunnel
