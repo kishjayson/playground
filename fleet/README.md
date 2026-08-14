@@ -1,8 +1,8 @@
 # Fleet
 
-Docker Compose deployment of Fleet, MySQL, Redis, and Tailscale.
+Runs Fleet, MySQL, Redis, and Tailscale with Docker Compose.
 
-## Procedure
+## Setup
 
 ### 1. Prepare
 
@@ -12,9 +12,9 @@ cd playground/fleet
 cp .env.example .env
 ```
 
-### 2. Configure environment
+### 2. Add environment values
 
-Set the Tailscale identity in `.env`:
+Add a Tailscale auth key to `.env`:
 
 ```dotenv
 TS_AUTHKEY=<tailscale-auth-key>
@@ -23,7 +23,7 @@ TS_HOSTNAME=fleet
 
 Create auth keys at [Tailscale Admin Console → Keys](https://console.tailscale.com/admin/settings/keys). See [Tailscale auth keys](https://tailscale.com/docs/features/access-control/auth-keys).
 
-Set `FLEET_LICENSE_KEY` when using Fleet Premium:
+For Fleet Premium, add the license key:
 
 ```dotenv
 FLEET_LICENSE_KEY=<fleet-license-key>
@@ -35,7 +35,7 @@ Leave it blank otherwise. See [Fleet on Docker Compose](https://fleetdm.com/guid
 
 ### 3. Configure HTTPS exposure
 
-Edit `config/serve.json` when the Fleet node uses a different Tailscale DNS name.
+Update `config/serve.json` if Fleet uses a different Tailscale DNS name.
 
 Current hostname:
 
@@ -43,7 +43,7 @@ Current hostname:
 fleet.tail2bebc3.ts.net
 ```
 
-The committed configuration enables Tailscale Funnel. Remove `AllowFunnel` for tailnet-only exposure through Tailscale Serve.
+The committed configuration uses Tailscale Funnel. For tailnet-only access, remove `AllowFunnel` and use Tailscale Serve.
 
 References: [Tailscale Funnel](https://tailscale.com/docs/features/tailscale-funnel), [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve).
 
@@ -53,7 +53,7 @@ References: [Tailscale Funnel](https://tailscale.com/docs/features/tailscale-fun
 docker compose up -d --pull=always --force-recreate --remove-orphans
 ```
 
-### 5. Verify
+### 5. Check
 
 ```sh
 docker compose ps
