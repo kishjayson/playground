@@ -1,11 +1,10 @@
 services:
-  tunnel-client:
+  fleet-mcp:
     build:
       context: .
-      dockerfile: Dockerfile
       args:
-        FLEET_REF: ${FLEET_MCP_REF:-main}
-        TUNNEL_CLIENT_REF: ${TUNNEL_CLIENT_REF:-v0.0.10}
+        FLEET_REF: ${FLEET_MCP_REF:-f9eb61c4d789d11a8cb08b6ca974e17a7686beb7}
+        TUNNEL_CLIENT_REF: ${TUNNEL_CLIENT_REF:-105e17a79a36e4e5c897fd698ed2b8dbf935b144}
     restart: unless-stopped
     network_mode: "service:tailscale"
     environment:
