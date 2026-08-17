@@ -1,6 +1,6 @@
 # Fleet
 
-Runs Fleet, MySQL, Redis, and Tailscale with Docker Compose.
+Fleet runs here with MySQL, Redis, and Tailscale using Docker Compose.
 
 ## Setup
 
@@ -14,36 +14,36 @@ cp .env.example .env
 
 ### 2. Add environment values
 
-Add a Tailscale auth key to `.env`:
+Start by adding a Tailscale auth key to `.env`:
 
 ```dotenv
 TS_AUTHKEY=<tailscale-auth-key>
 TS_HOSTNAME=fleet
 ```
 
-Create auth keys at [Tailscale Admin Console → Keys](https://console.tailscale.com/admin/settings/keys). See [Tailscale auth keys](https://tailscale.com/docs/features/access-control/auth-keys).
+You can create an auth key at [Tailscale Admin Console → Keys](https://console.tailscale.com/admin/settings/keys). See [Tailscale auth keys](https://tailscale.com/docs/features/access-control/auth-keys).
 
-For Fleet Premium, add the license key:
+If you use Fleet Premium, add the license key as well:
 
 ```dotenv
 FLEET_LICENSE_KEY=<fleet-license-key>
 ```
 
-Leave it blank otherwise. See [Fleet on Docker Compose](https://fleetdm.com/guides/deploy-fleet-on-docker-compose).
+Otherwise, leave it blank. See [Fleet on Docker Compose](https://fleetdm.com/guides/deploy-fleet-on-docker-compose).
 
 `FLEET_VERSION` and `TAILSCALE_VERSION` default to `latest`.
 
 ### 3. Configure HTTPS exposure
 
-Update `config/serve.json` if Fleet uses a different Tailscale DNS name.
-
-Current hostname:
+The included configuration exposes Fleet at:
 
 ```text
 fleet.tail2bebc3.ts.net
 ```
 
-The committed configuration uses Tailscale Funnel. For tailnet-only access, remove `AllowFunnel` and use Tailscale Serve.
+If Fleet uses a different Tailscale DNS name, update `config/serve.json`.
+
+The committed configuration uses Tailscale Funnel. If you only want Fleet available inside the tailnet, remove `AllowFunnel` and use Tailscale Serve instead.
 
 See [Tailscale Funnel](https://tailscale.com/docs/features/tailscale-funnel) and [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve).
 
@@ -60,7 +60,7 @@ docker compose ps
 docker compose logs -f fleet
 ```
 
-Fleet URL:
+Open Fleet at:
 
 ```text
 https://fleet.tail2bebc3.ts.net
