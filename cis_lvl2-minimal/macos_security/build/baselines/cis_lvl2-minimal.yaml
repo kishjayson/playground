@@ -1,0 +1,54 @@
+title: "macOS 15.0: Security Configuration - CIS_LVL2-MINIMAL (Tailored from CIS_LVL2)"
+description: |
+  This guide describes the actions to take when securing a macOS 15.0 system against the CIS_LVL2-MINIMAL (Tailored from CIS_LVL2) security baseline.
+authors: |
+  *Security configuration tailored by:*
+  |===
+  |Jayson Kish|macplus.solutions
+  |===
+  *macOS Security Compliance Project*
+
+  The CIS Benchmarks are referenced with the permission and support of the Center for Internet Security® (CIS®)
+  |===
+  |Edward Byrd|Center for Internet Security
+  |Ron Colvin|Center for Internet Security
+  |Allen Golbig|Jamf
+  |===
+parent_values: "cis_lvl2"
+profile:
+  - section: "macos"
+    rules:
+      - os_config_data_install_enforce
+      - os_gatekeeper_enable
+      - os_safari_advertising_privacy_protection_enable
+      - os_safari_open_safe_downloads_disable
+      - os_safari_prevent_cross-site_tracking_enable
+      - os_safari_warn_fraudulent_website_enable
+      - os_terminal_secure_keyboard_enable
+  - section: "passwordpolicy"
+    rules:
+      - pwpolicy_account_lockout_enforce
+      - pwpolicy_account_lockout_timeout_enforce
+  - section: "systemsettings"
+    rules:
+      - system_settings_automatic_login_disable
+      - system_settings_bluetooth_menu_enable
+      - system_settings_critical_update_install_enforce
+      - system_settings_filevault_enforce
+      - system_settings_firewall_enable
+      - system_settings_firewall_stealth_mode_enable
+      - system_settings_guest_account_disable
+      - system_settings_install_macos_updates_enforce
+      - system_settings_loginwindow_loginwindowtext_enable
+      - system_settings_loginwindow_prompt_username_password_enforce
+      - system_settings_password_hints_disable
+      - system_settings_personalized_advertising_disable
+      - system_settings_screensaver_ask_for_password_delay_enforce
+      - system_settings_screensaver_timeout_enforce
+      - system_settings_software_update_app_update_enforce
+      - system_settings_software_update_download_enforce
+      - system_settings_software_update_enforce
+      - system_settings_time_machine_auto_backup_enable
+      - system_settings_time_server_configure
+      - system_settings_time_server_enforce
+      - system_settings_wifi_menu_enable
