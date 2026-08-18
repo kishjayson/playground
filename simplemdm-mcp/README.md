@@ -1,6 +1,6 @@
 # SimpleMDM MCP
 
-SimpleMDM MCP gives ChatGPT read-only access to SimpleMDM through an OpenAI Secure MCP Tunnel.
+SimpleMDM MCP gives ChatGPT read-only access to SimpleMDM. Tailscale gives the service its own tailnet identity, and an OpenAI Secure MCP Tunnel carries the MCP connection to ChatGPT.
 
 ## Setup
 
@@ -23,7 +23,18 @@ SIMPLEMDM_API_KEY=<simplemdm-api-key>
 
 You can create an API key in SimpleMDM under **Settings → API**. See [SimpleMDM API](https://api.simplemdm.com/v1).
 
-### 3. Add Secure MCP Tunnel
+### 3. Add Tailscale
+
+Create an auth key at [Tailscale Admin Console → Keys](https://console.tailscale.com/admin/settings/keys), then add it to `.env`:
+
+```dotenv
+TS_AUTHKEY=<tailscale-auth-key>
+TS_HOSTNAME=simplemdm-mcp
+```
+
+See [Tailscale auth keys](https://tailscale.com/docs/features/access-control/auth-keys).
+
+### 4. Add Secure MCP Tunnel
 
 Create a tunnel at [OpenAI Platform → Tunnels](https://platform.openai.com/settings/organization/tunnels) and associate it with the Platform organization and ChatGPT workspace that will use it.
 
@@ -43,14 +54,14 @@ See [OpenAI Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/sec
 
 The tunnel client is pinned in this repository. You normally don't need to change `TUNNEL_CLIENT_REF`.
 
-### 4. Build and start
+### 5. Build and start
 
 ```sh
 docker compose build --pull --no-cache
 docker compose up -d --force-recreate --remove-orphans
 ```
 
-### 5. Check
+### 6. Check
 
 ```sh
 docker compose ps
@@ -69,7 +80,7 @@ You should see:
 ready
 ```
 
-### 6. Add to ChatGPT
+### 7. Add to ChatGPT
 
 Open [ChatGPT Plugins](https://chatgpt.com/plugins) and create a developer-mode app. See [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-full-mcp-connectors-in-chatgpt).
 
