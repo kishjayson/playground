@@ -28,6 +28,7 @@ services:
 
   tailscale:
     image: tailscale/tailscale:${TAILSCALE_VERSION:-latest}
+    hostname: ${TS_HOSTNAME:-fleet-mcp}
     restart: unless-stopped
     environment:
       TS_AUTHKEY: ${TS_AUTHKEY}
