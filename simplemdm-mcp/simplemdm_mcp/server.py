@@ -5,8 +5,10 @@ from typing import Any
 from mcp.server import MCPServer
 
 from .client import SimpleMDMClient
+from .write_tools import register_write_tools
 
 mcp = MCPServer("SimpleMDM")
+register_write_tools(mcp)
 
 
 def _page_params(limit: int, starting_after: int, direction: str) -> dict[str, Any]:

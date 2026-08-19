@@ -1,6 +1,8 @@
 # SimpleMDM MCP
 
-SimpleMDM MCP gives ChatGPT read-only access to SimpleMDM. Tailscale gives the service its own tailnet identity, and an OpenAI Secure MCP Tunnel carries the MCP connection to ChatGPT.
+SimpleMDM MCP gives ChatGPT focused access to SimpleMDM. It can inspect account, device, profile, app, enrollment, and script state, and it can create, update, scope, and remove custom configuration profiles and Declarative Device Management declarations. Tailscale gives the service its own tailnet identity, and an OpenAI Secure MCP Tunnel carries the MCP connection to ChatGPT.
+
+Device recovery keys and password values are redacted from device responses. The write surface is intentionally limited to profile and declaration management; destructive device-management commands are not exposed.
 
 ## Setup
 
@@ -21,7 +23,7 @@ SIMPLEMDM_BASE_URL=https://a.simplemdm.com/api/v1
 SIMPLEMDM_API_KEY=<simplemdm-api-key>
 ```
 
-You can create an API key in SimpleMDM under **Settings → API**. See [SimpleMDM API](https://api.simplemdm.com/v1).
+You can create an API key in SimpleMDM under **Settings → API**. The API key must have permission for any write operations you intend to use. See [SimpleMDM API](https://api.simplemdm.com/v1).
 
 ### 3. Add Tailscale
 
@@ -97,3 +99,5 @@ To verify the connection, ask:
 ```text
 simplemdm-mcp How many devices are enrolled in SimpleMDM?
 ```
+
+For a safe write-path check, create a disposable custom profile without assigning it, verify it appears in `get_custom_configuration_profiles`, then delete it.
