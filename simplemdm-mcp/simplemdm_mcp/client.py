@@ -16,7 +16,7 @@ DEVICE_SECRET_FIELDS = {
 
 
 class SimpleMDMClient:
-    """Thin asynchronous client for SimpleMDM GET endpoints."""
+    """Thin asynchronous client for the SimpleMDM API."""
 
     def __init__(
         self,
@@ -65,13 +65,43 @@ class SimpleMDMClient:
         walk(result)
         return result
 
+    @staticmethod
+    def _response_payload(response: httpx.Response) -> dict[str, Any]:
+        response.raise_for_status()
+        if not response.content:
+            return {"status_code": response.status_code}
+        return response.json()
+
     async def get(self, path: str, *, redact_device_secrets: bool = False, **params: Any) -> dict[str, Any]:
         response = await self._client.get(path, params=self._params(params))
-        response.raise_for_status()
-        payload = response.json()
+        payload = self._response_payload(response)
         if redact_device_secrets:
             return self.redact_device_secrets(payload)
         return payload
+
+    async def post(
+        self,
+        path: str,
+        *,
+        data: dict[str, Any] | None = None,
+        files: dict[str, tuple[str, str, str]] | None = None,
+    ) -> dict[str, Any]:
+        response = await self._client.post(path, data=data, files=files)
+        return self._response_payload(response)
+
+    async def patch(
+        self,
+        path: str,
+        *,
+        data: dict[str, Any] | None = None,
+        files: dict[str, tuple[str, str, str]] | None = None,
+    ) -> dict[str, Any]:
+        response = await self._client.patch(path, data=data, files=files)
+        return self._response_payload(response)
+
+    async def delete(self, path: str) -> dict[str, Any]:
+        response = await self._client.delete(path)
+        return self._response_payload(response)
 
     async def get_content(self, path: str, **params: Any) -> dict[str, str]:
         response = await self._client.get(path, params=self._params(params))
