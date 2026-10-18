@@ -18,7 +18,6 @@ spec:
             version,
             type
     FROM    homebrew_packages;
-  team: ""
 ---
 apiVersion: v1
 kind: report
@@ -43,7 +42,6 @@ spec:
     WHERE   path NOT LIKE '%/Library/%'
     AND     path NOT LIKE '%/System/%'
     AND     path NOT LIKE '%.app/%';
-  team: ""
 ---
 apiVersion: v1
 kind: report
@@ -64,7 +62,6 @@ spec:
             build,
             platform
     FROM    os_version;
-  team: ""
 ---
 apiVersion: v1
 kind: report
@@ -85,4 +82,3 @@ spec:
     WHERE   address != '127.0.0.1'
     AND     address != '::1'
     AND     address != '255.255.255.255';
-  team: ""
