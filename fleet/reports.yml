@@ -36,7 +36,7 @@ spec:
   description: https://fleetdm.com/tables/alf_explicit_auths
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: alf_explicit_auths
@@ -90,7 +90,7 @@ spec:
   description: https://fleetdm.com/tables/authorized_keys
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: authorized_keys
@@ -105,7 +105,7 @@ spec:
   description: https://fleetdm.com/tables/certificates
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: certificates
@@ -120,7 +120,7 @@ spec:
   description: https://fleetdm.com/tables/curl
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: curl
@@ -135,7 +135,7 @@ spec:
   description: https://fleetdm.com/tables/curl_certificate
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: curl_certificate
@@ -165,7 +165,7 @@ spec:
   description: https://fleetdm.com/tables/docker_container_envs
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_container_envs
@@ -180,7 +180,7 @@ spec:
   description: https://fleetdm.com/tables/docker_container_fs_changes
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_container_fs_changes
@@ -195,7 +195,7 @@ spec:
   description: https://fleetdm.com/tables/docker_container_labels
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_container_labels
@@ -240,7 +240,7 @@ spec:
   description: https://fleetdm.com/tables/docker_container_ports
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_container_ports
@@ -255,7 +255,7 @@ spec:
   description: https://fleetdm.com/tables/docker_container_processes
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_container_processes
@@ -270,7 +270,7 @@ spec:
   description: https://fleetdm.com/tables/docker_container_stats
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_container_stats
@@ -300,7 +300,7 @@ spec:
   description: https://fleetdm.com/tables/docker_image_history
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_image_history
@@ -315,7 +315,7 @@ spec:
   description: https://fleetdm.com/tables/docker_image_labels
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_image_labels
@@ -330,7 +330,7 @@ spec:
   description: https://fleetdm.com/tables/docker_image_layers
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_image_layers
@@ -360,7 +360,7 @@ spec:
   description: https://fleetdm.com/tables/docker_info
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_info
@@ -375,7 +375,7 @@ spec:
   description: https://fleetdm.com/tables/docker_network_labels
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_network_labels
@@ -420,7 +420,7 @@ spec:
   description: https://fleetdm.com/tables/docker_volume_labels
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: docker_volume_labels
@@ -470,7 +470,7 @@ spec:
   description: https://fleetdm.com/tables/etc_services
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: etc_services
@@ -485,7 +485,7 @@ spec:
   description: https://fleetdm.com/tables/fleetd_logs
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: fleetd_logs
@@ -565,7 +565,7 @@ spec:
   description: https://fleetdm.com/tables/known_hosts
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: known_hosts
@@ -640,7 +640,7 @@ spec:
   description: https://fleetdm.com/tables/macos_user_profiles
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: macos_user_profiles
@@ -685,7 +685,7 @@ spec:
   description: https://fleetdm.com/tables/network_quality
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: network_quality
@@ -735,7 +735,7 @@ spec:
   description: https://fleetdm.com/tables/processes
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: processes
@@ -780,7 +780,7 @@ spec:
   description: https://fleetdm.com/tables/sntp_request
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: sntp_request
@@ -795,7 +795,7 @@ spec:
   description: https://fleetdm.com/tables/socket_events
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: socket_events
@@ -810,7 +810,7 @@ spec:
   description: https://fleetdm.com/tables/ssh_configs
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: ssh_configs
@@ -840,7 +840,7 @@ spec:
   description: https://fleetdm.com/tables/unified_log
   discard_data: false
   fleet: ""
-  interval: 0
+  interval: 3600
   logging: snapshot
   min_osquery_version: ""
   name: unified_log
