@@ -3,51 +3,6 @@ apiVersion: v1
 kind: report
 spec:
   automations_enabled: false
-  description: https://fleetdm.com/tables/alf
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: alf
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM alf;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/alf_exceptions
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: alf_exceptions
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM alf_exceptions;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/alf_explicit_auths
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: alf_explicit_auths
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM alf_explicit_auths;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
   description: https://fleetdm.com/tables/apps
   discard_data: false
   fleet: ""
@@ -55,7 +10,7 @@ spec:
   logging: snapshot
   min_osquery_version: ""
   name: apps
-  observer_can_run: false
+  observer_can_run: true
   platform: darwin
   query: |-
     SELECT  name,
@@ -72,96 +27,6 @@ apiVersion: v1
 kind: report
 spec:
   automations_enabled: false
-  description: https://fleetdm.com/tables/arp_cache
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: arp​_cache
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM arp_cache;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/authorized_keys
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: authorized_keys
-  observer_can_run: false
-  platform: darwin,linux
-  query: SELECT authorized_keys.* FROM users CROSS JOIN authorized_keys USING (uid);
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/certificates
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: certificates
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM certificates;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/curl
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: curl
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM curl WHERE url = 'https://fleetdm.com';
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/curl_certificate
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: curl_certificate
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM curl_certificate WHERE hostname = 'fleetdm.com';
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/dns_resolvers
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: dns_resolvers
-  observer_can_run: false
-  platform: darwin,linux
-  query: SELECT * FROM dns_resolvers;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
   description: https://fleetdm.com/tables/etc_hosts
   discard_data: false
   fleet: ""
@@ -169,7 +34,7 @@ spec:
   logging: snapshot
   min_osquery_version: ""
   name: etc_hosts
-  observer_can_run: false
+  observer_can_run: true
   platform: darwin,windows,linux
   query: |-
     SELECT  *
@@ -182,21 +47,6 @@ apiVersion: v1
 kind: report
 spec:
   automations_enabled: false
-  description: https://fleetdm.com/tables/etc_services
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: etc_services
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM etc_services;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
   description: https://fleetdm.com/tables/homebrew_packages
   discard_data: false
   fleet: ""
@@ -204,7 +54,7 @@ spec:
   logging: snapshot
   min_osquery_version: ""
   name: homebrew_packages
-  observer_can_run: false
+  observer_can_run: true
   platform: darwin
   query: |-
     SELECT  name,
@@ -217,186 +67,6 @@ apiVersion: v1
 kind: report
 spec:
   automations_enabled: false
-  description: https://fleetdm.com/tables/icloud_private_relay
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: icloud_private_relay
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM icloud_private_relay;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/interface_addresses
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: interface​_addresses
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM interface_addresses;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/interface_details
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: interface​_details
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM interface_details;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/known_hosts
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: known_hosts
-  observer_can_run: false
-  platform: darwin,linux
-  query: SELECT known_hosts.* FROM users CROSS JOIN known_hosts USING (uid);
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/listening_ports
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: listening_ports
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM listening_ports;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/local_network_permissions
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: local_network_permissions
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM local_network_permissions;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/macadmins_wifi_network
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: macadmins​_wifi​_network
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM macadmins_wifi_network;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/macos_profiles
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: macos_profiles
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM macos_profiles;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/macos_user_profiles
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: macos_user_profiles
-  observer_can_run: false
-  platform: darwin
-  query: SELECT macos_user_profiles.* FROM users JOIN macos_user_profiles ON macos_user_profiles.username = users.username;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/managed_policies
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: managed_policies
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM managed_policies;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/netskope
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: netskope
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM netskope;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/network_quality
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: network_quality
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM network_quality;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
   description: https://fleetdm.com/tables/os_version
   discard_data: false
   fleet: ""
@@ -404,7 +74,7 @@ spec:
   logging: snapshot
   min_osquery_version: ""
   name: os_version
-  observer_can_run: false
+  observer_can_run: true
   platform: darwin,windows,linux,chrome
   query: |-
     SELECT  name,
@@ -417,51 +87,6 @@ apiVersion: v1
 kind: report
 spec:
   automations_enabled: false
-  description: https://fleetdm.com/tables/process_open_sockets
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: process_open_sockets
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM process_open_sockets;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/processes
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: processes
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM processes;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/routes
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: routes
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM routes;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
   description: https://fleetdm.com/tables/sharing_preferences
   discard_data: false
   fleet: ""
@@ -469,156 +94,6 @@ spec:
   logging: snapshot
   min_osquery_version: ""
   name: sharing_preferences
-  observer_can_run: false
+  observer_can_run: true
   platform: darwin
   query: SELECT * FROM sharing_preferences;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/sntp_request
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: sntp_request
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT * FROM sntp_request WHERE server = 'time.apple.com';
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/socket_events
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: socket_events
-  observer_can_run: false
-  platform: darwin,linux
-  query: SELECT * FROM socket_events;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/ssh_configs
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: ssh_configs
-  observer_can_run: false
-  platform: darwin,windows,linux
-  query: SELECT ssh_configs.* FROM users CROSS JOIN ssh_configs USING (uid);
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/system_extensions
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: system_extensions
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM system_extensions;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/unified_log
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: unified_log
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM unified_log WHERE timestamp > (SELECT unix_time - 3600 FROM time) LIMIT 100;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/wifi_networks
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: wifi​_networks
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM wifi_networks;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/wifi_status
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: wifi_status
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM wifi_status;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/wifi_survey
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: wifi​_survey
-  observer_can_run: false
-  platform: darwin
-  query: SELECT * FROM wifi_survey;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/windows​_update​_history
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: windows​_update​_history
-  observer_can_run: false
-  platform: windows
-  query: SELECT * FROM windows_update_history;
----
-apiVersion: v1
-kind: report
-spec:
-  automations_enabled: false
-  description: https://fleetdm.com/tables/windows​_updates
-  discard_data: false
-  fleet: ""
-  interval: 3600
-  logging: snapshot
-  min_osquery_version: ""
-  name: windows​_updates
-  observer_can_run: false
-  platform: windows
-  query: SELECT * FROM windows_updates;
