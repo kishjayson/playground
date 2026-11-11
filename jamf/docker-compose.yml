@@ -1,0 +1,66 @@
+services:
+  mysql:
+    image: mysql:8.0.36
+    platform: linux/x86_64
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: jamf
+      MYSQL_USER: jamf
+      MYSQL_PASSWORD: jamf
+    volumes:
+      - jamf_mysql_data:/var/lib/mysql
+    networks:
+      - jamf-server
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$${MYSQL_USER} -p$${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  jamfpro:
+    image: jamf/jamfpro:${JAMFPRO_IMAGE_VERSION:-latest}
+    platform: linux/x86_64
+    restart: unless-stopped
+    network_mode: "service:tailscale"
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      DATABASE_NAME: jamf
+      DATABASE_USERNAME: jamf
+      DATABASE_PASSWORD: jamf
+      STDOUT_LOGGING: "true"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      tailscale:
+        condition: service_started
+    volumes:
+      - ./ROOT.war:/data/ROOT.war:ro
+      - jamf_logs:/usr/local/tomcat/logs
+
+  tailscale:
+    image: tailscale/tailscale:${TAILSCALE_VERSION:-latest}
+    hostname: ${TS_HOSTNAME:-jamfpro}
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_HOSTNAME: ${TS_HOSTNAME:-jamfpro}
+      TS_SERVE_CONFIG: /config/serve.json
+    volumes:
+      - tailscale_data:/var/lib/tailscale
+      - ./config/serve.json:/config/serve.json:ro
+    networks:
+      - jamf-server
+
+volumes:
+  jamf_mysql_data:
+  jamf_logs:
+  tailscale_data:
+
+networks:
+  jamf-server:
+    name: jamf-server
