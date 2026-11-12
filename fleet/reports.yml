@@ -498,20 +498,20 @@ spec:
   observer_can_run: true
   platform: darwin
   query: |-
-    SELECT  interface,
-            ssid,
-            bssid,
-            network_name,
-            country_code,
-            security_type,
-            rssi,
-            noise,
-            channel,
-            channel_width,
-            channel_band,
-            transmit_rate,
-            mode
-    FROM    wifi_status;
+    SELECT  w.interface,
+            w.ssid,
+            w.network_name,
+            m.security_type,
+            w.rssi,
+            w.noise,
+            w.channel,
+            w.channel_width,
+            w.channel_band,
+            w.transmit_rate,
+            w.mode
+    FROM    wifi_status AS w
+    LEFT JOIN macadmins_wifi_network AS m
+            ON w.interface = m.interface;
 ---
 apiVersion: v1
 kind: report
