@@ -27,6 +27,101 @@ apiVersion: v1
 kind: report
 spec:
   automations_enabled: false
+  description: https://fleetdm.com/tables/arp_cache
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: arp_cache
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  address,
+            mac,
+            interface,
+            permanent
+    FROM    arp_cache;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/crashes
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: crashes
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  c.type,
+            c.pid,
+            c.path,
+            c.crash_path,
+            c.identifier,
+            c.datetime,
+            c.exception_type,
+            c.exception_codes
+    FROM    users AS u
+    JOIN    crashes AS c ON c.uid = u.uid
+    WHERE   (c.path LIKE '%airportd%'
+             OR c.path LIKE '%eapolclient%'
+             OR c.path LIKE '%configd%'
+             OR c.identifier LIKE '%airportd%'
+             OR c.identifier LIKE '%eapolclient%'
+             OR c.identifier LIKE '%configd%')
+    LIMIT   100;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/curl
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: curl
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  url,
+            response_code,
+            round_trip_time,
+            bytes,
+            result
+    FROM    curl
+    WHERE   url = 'http://captive.apple.com/hotspot-detect.html';
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/dns_resolvers
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: dns_resolvers
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  id,
+            type,
+            address,
+            netmask,
+            options
+    FROM    dns_resolvers;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
   description: https://fleetdm.com/tables/etc_hosts
   discard_data: false
   fleet: ""
@@ -42,6 +137,29 @@ spec:
     WHERE   address != '127.0.0.1'
     AND     address != '::1'
     AND     address != '255.255.255.255';
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/file
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: file
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  path,
+            filename,
+            size,
+            datetime(mtime, 'unixepoch') AS modified_at
+    FROM    file
+    WHERE   path LIKE '/Library/Logs/DiagnosticReports/%'
+    AND     (filename LIKE '%panic%' OR filename LIKE '%Panic%')
+    AND     mtime >= (SELECT unix_time - 604800 FROM time);
 ---
 apiVersion: v1
 kind: report
@@ -67,6 +185,137 @@ apiVersion: v1
 kind: report
 spec:
   automations_enabled: false
+  description: https://fleetdm.com/tables/interface_addresses
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: interface_addresses
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  interface,
+            address,
+            mask,
+            broadcast,
+            type
+    FROM    interface_addresses;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/interface_details
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: interface_details
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  interface,
+            mac,
+            mtu,
+            flags,
+            ipackets,
+            opackets,
+            ibytes,
+            obytes,
+            ierrors,
+            oerrors,
+            idrops,
+            odrops,
+            collisions,
+            last_change,
+            link_speed
+    FROM    interface_details;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/kernel_panics
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: kernel_panics
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  path,
+            time,
+            name,
+            os_version,
+            kernel_version,
+            system_model,
+            uptime,
+            frame_backtrace,
+            module_backtrace
+    FROM    kernel_panics
+    ORDER BY time DESC
+    LIMIT   50;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/macadmins_unified_log
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: macadmins_unified_log
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  datetime(timestamp, 'unixepoch') AS event_time,
+            process_image_path,
+            subsystem,
+            category,
+            log_level,
+            event_message
+    FROM    macadmins_unified_log
+    WHERE   last = '1h'
+    AND     predicate = 'process == "airportd" OR process == "eapolclient" OR process == "configd" OR subsystem == "com.apple.wifi"'
+    ORDER BY timestamp DESC
+    LIMIT   500;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/macadmins_wifi_network
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: macadmins_wifi_network
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  interface,
+            ssid,
+            rssi,
+            noise,
+            channel,
+            channel_width,
+            channel_band,
+            transmit_rate,
+            security_type,
+            mode
+    FROM    macadmins_wifi_network;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
   description: https://fleetdm.com/tables/os_version
   discard_data: false
   fleet: ""
@@ -87,6 +336,54 @@ apiVersion: v1
 kind: report
 spec:
   automations_enabled: false
+  description: https://fleetdm.com/tables/processes
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: processes
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  pid,
+            name,
+            path,
+            state,
+            start_time,
+            cmdline
+    FROM    processes
+    WHERE   name IN ('airportd', 'eapolclient', 'configd');
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/routes
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: routes
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  destination,
+            netmask,
+            gateway,
+            source,
+            flags,
+            interface,
+            mtu,
+            metric,
+            type
+    FROM    routes;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
   description: https://fleetdm.com/tables/sharing_preferences
   discard_data: false
   fleet: ""
@@ -97,3 +394,169 @@ spec:
   observer_can_run: true
   platform: darwin
   query: SELECT * FROM sharing_preferences;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/system_extensions
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: system_extensions
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  identifier,
+            version,
+            state,
+            category,
+            team,
+            mdm_managed,
+            path
+    FROM    system_extensions;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/time
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: time
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  datetime,
+            unix_time,
+            local_timezone
+    FROM    time;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/unified_log
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: unified_log
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  datetime(timestamp, 'unixepoch') AS event_time,
+            process,
+            subsystem,
+            level,
+            message
+    FROM    unified_log
+    WHERE   timestamp >= (SELECT unix_time - 3600 FROM time)
+    AND     max_rows = 500
+    AND     predicate = 'process == "kernel" AND (eventMessage CONTAINS[c] "wlan" OR eventMessage CONTAINS[c] "80211" OR eventMessage CONTAINS[c] "bcm" OR eventMessage CONTAINS[c] "wifi")'
+    ORDER BY timestamp DESC
+    LIMIT   500;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/uptime
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: uptime
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  days,
+            hours,
+            minutes,
+            seconds,
+            total_seconds
+    FROM    uptime;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/wifi_networks
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: wifi_networks
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  ssid,
+            network_name,
+            security_type,
+            last_connected,
+            last_connected_automatic,
+            last_connected_manual,
+            roaming,
+            auto_join,
+            disabled,
+            captive_portal
+    FROM    wifi_networks;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/wifi_status
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: wifi_status
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  interface,
+            ssid,
+            network_name,
+            security_type,
+            rssi,
+            noise,
+            channel,
+            channel_width,
+            channel_band,
+            transmit_rate,
+            mode
+    FROM    wifi_status;
+---
+apiVersion: v1
+kind: report
+spec:
+  automations_enabled: false
+  description: https://fleetdm.com/tables/wifi_survey
+  discard_data: false
+  fleet: ""
+  interval: 3600
+  logging: snapshot
+  min_osquery_version: ""
+  name: wifi_survey
+  observer_can_run: true
+  platform: darwin
+  query: |-
+    SELECT  interface,
+            ssid,
+            network_name,
+            rssi,
+            noise,
+            channel,
+            channel_width,
+            channel_band
+    FROM    wifi_survey;
