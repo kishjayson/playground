@@ -1,0 +1,52 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:${TAILSCALE_VERSION:-latest}
+    hostname: grafana
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_HOSTNAME: grafana
+      TS_SERVE_CONFIG: /config/serve.json
+    volumes:
+      - tailscale_data:/var/lib/tailscale
+      - ./config:/config:ro
+
+  grafana:
+    image: grafana/grafana:13.3.0
+    restart: unless-stopped
+    network_mode: "service:tailscale"
+    environment:
+      GF_SERVER_ROOT_URL: https://grafana.tail2bebc3.ts.net/
+      GF_SECURITY_COOKIE_SECURE: "true"
+    depends_on:
+      tailscale:
+        condition: service_started
+      loki:
+        condition: service_healthy
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+
+  loki:
+    image: grafana/loki:3.7.8
+    restart: unless-stopped
+    network_mode: "service:tailscale"
+    depends_on:
+      tailscale:
+        condition: service_started
+    command: -config.file=/etc/loki/config.yml
+    volumes:
+      - ./loki/config.yml:/etc/loki/config.yml:ro
+      - loki_data:/loki
+    healthcheck:
+      test: ["CMD", "/usr/bin/loki", "-health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  grafana_data:
+  loki_data:
+  tailscale_data:

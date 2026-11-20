@@ -1,0 +1,45 @@
+loki.source.file "fleet_results" {
+  targets = [
+    {
+      __path__ = "/var/log/fleet/result.log",
+      job      = "fleet",
+    },
+  ]
+  forward_to = [loki.process.fleet_results.receiver]
+}
+
+loki.process "fleet_results" {
+  stage.json {
+    expressions = {
+      host     = "decorations.hostname",
+      query    = "name",
+      observed = "unixTime",
+    }
+  }
+
+  stage.labels {
+    values = {
+      host  = "",
+      query = "",
+    }
+  }
+
+  stage.timestamp {
+    source            = "observed"
+    format            = "Unix"
+    action_on_failure = "skip"
+  }
+
+  forward_to = [loki.write.central.receiver]
+}
+
+loki.write "central" {
+  external_labels = {
+    fleet_instance = sys.env("FLEET_INSTANCE"),
+  }
+
+  endpoint {
+    url       = sys.env("LOKI_URL")
+    proxy_url = "http://127.0.0.1:1055"
+  }
+}

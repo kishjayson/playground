@@ -1,0 +1,30 @@
+{
+  "TCP": {
+    "443": {
+      "HTTPS": true
+    },
+    "8443": {
+      "HTTPS": true
+    }
+  },
+  "Web": {
+    "grafana.tail2bebc3.ts.net:443": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:3000"
+        }
+      }
+    },
+    "grafana.tail2bebc3.ts.net:8443": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:3100"
+        }
+      }
+    }
+  },
+  "AllowFunnel": {
+    "grafana.tail2bebc3.ts.net:443": true,
+    "grafana.tail2bebc3.ts.net:8443": false
+  }
+}

@@ -62,6 +62,22 @@ services:
       - ./logs:/logs
       - ./vulndb:/vulndb
 
+  alloy:
+    image: grafana/alloy:v1.21.3
+    restart: unless-stopped
+    network_mode: "service:tailscale"
+    command: ["run", "--storage.path=/var/lib/alloy", "/etc/alloy/config.alloy"]
+    environment:
+      LOKI_URL: ${LOKI_URL}
+      FLEET_INSTANCE: ${TS_HOSTNAME:-fleet}
+    depends_on:
+      tailscale:
+        condition: service_started
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - ./logs:/var/log/fleet:ro
+      - alloy_data:/var/lib/alloy
+
   tailscale:
     image: tailscale/tailscale:${TAILSCALE_VERSION:-latest}
     hostname: ${TS_HOSTNAME:-fleet}
@@ -71,6 +87,7 @@ services:
       TS_STATE_DIR: /var/lib/tailscale
       TS_HOSTNAME: ${TS_HOSTNAME:-fleet}
       TS_SERVE_CONFIG: /config/serve.json
+      TS_OUTBOUND_HTTP_PROXY_LISTEN: 127.0.0.1:1055
     volumes:
       - tailscale_data:/var/lib/tailscale
       - ./config:/config
@@ -80,6 +97,7 @@ services:
 volumes:
   mysql_data:
   tailscale_data:
+  alloy_data:
 
 networks:
   fleet-server:
